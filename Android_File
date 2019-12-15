@@ -1,0 +1,161 @@
+package com.technova.jobcard;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.icu.text.Transliterator;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity{
+
+    //Date Part
+    private static final String TAG = "MainActivity";
+    private TextView DisplayDate;
+    private DatePickerDialog.OnDateSetListener DateSetListner;
+
+    //Variables
+    Button Exit,Reset, Add, Cancel;
+    EditText JobNo, QuatationNo, Add1, Add2, Contact, Remark, TecRemark;
+    Spinner Date, InspectBy, Department, JobType, InsCompany, VehicleNo, Category, Cus1, Cus2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //DatePart
+        DisplayDate = (TextView) findViewById(R.id.txtDate);
+        DisplayDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, DateSetListner, year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        DateSetListner = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month=month+1;
+                Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+                String date = month + "/" + day + "/" + year;
+                DisplayDate.setText(date);
+            }
+        };
+
+        //Declarations
+        Exit = (Button) findViewById(R.id.btnExit);
+        Reset = (Button) findViewById(R.id.btnReset);
+        Add = (Button) findViewById(R.id.btnAdd);
+        Cancel = (Button) findViewById(R.id.btnCancel);
+        JobNo = (EditText) findViewById(R.id.txtJobNo);
+        QuatationNo = (EditText) findViewById(R.id.txtQutNo);
+        Add1 = (EditText) findViewById(R.id.txtAddress1);
+        Add2 = (EditText) findViewById(R.id.txtAddress2);
+        Contact = (EditText) findViewById(R.id.txtContact);
+        Remark = (EditText) findViewById(R.id.txtRemark);
+        TecRemark = (EditText) findViewById(R.id.txtTecRemark);
+        InspectBy = (Spinner) findViewById(R.id.spinnerInspectBy);
+        Department = (Spinner) findViewById(R.id.spinnerDepartment);
+        JobType = (Spinner) findViewById(R.id.spinnerJobType);
+        InsCompany = (Spinner) findViewById(R.id.spinnerInsCompany);
+        VehicleNo = (Spinner) findViewById(R.id.spinnerVehicleNo);
+        Category = (Spinner) findViewById(R.id.spinnerCategory);
+        Cus1 = (Spinner) findViewById(R.id.spinnerCustomer1);
+        Cus2 = (Spinner) findViewById(R.id.spinnerCustomer2);
+
+
+        //Reset Command
+        Reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JobNo.setText("");
+                QuatationNo.setText("");
+                Add1.setText("");
+                Add2.setText("");
+                Contact.setText("");
+                Remark.setText("");
+                TecRemark.setText("");
+                Date.setSelection(0);
+                InspectBy.setSelection(0);
+                Department.setSelection(0);
+                JobType.setSelection(0);
+                InsCompany.setSelection(0);
+                VehicleNo.setSelection(0);
+                Category.setSelection(0);
+                Cus1.setSelection(0);
+                Cus2.setSelection(0);
+            }
+        });
+
+        //Exit Command
+        Exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        //Cancel Command
+        Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        //Add Button Command
+        Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Validation Part
+                if (Date.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Date!", Toast.LENGTH_SHORT).show();
+                } else if (InspectBy.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Inspect By!", Toast.LENGTH_SHORT).show();
+                } else if (QuatationNo.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Quatation No!", Toast.LENGTH_SHORT).show();
+                } else if (Department.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Department!", Toast.LENGTH_SHORT).show();
+                } else if (JobType.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Job Type!", Toast.LENGTH_SHORT).show();
+                } else if (InsCompany.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Ins.Company!", Toast.LENGTH_SHORT).show();
+                } else if (VehicleNo.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Vehicle No!", Toast.LENGTH_SHORT).show();
+                } else if (Category.getSelectedItemPosition() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Select Category!", Toast.LENGTH_SHORT).show();
+                } else if (Add1.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Address!", Toast.LENGTH_SHORT).show();
+                } else if (Contact.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Contact No!", Toast.LENGTH_SHORT).show();
+                } else if (Remark.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Remark Field!", Toast.LENGTH_SHORT).show();
+                } else if (TecRemark.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Tech Remark Field!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
